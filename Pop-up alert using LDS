@@ -1,0 +1,42 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <aura:handler event="force:refreshView" action="{!c.isRefreshed}" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="contact" type="Object"/>
+    <aura:attribute name="simpleContact" type="Object"/> 
+
+    <force:recordData aura:id="contactRecordLoader"
+                  recordId="{!v.recordId}"
+                  fields="Id,DFS_Issue__c"
+                  targetRecord="{!v.contact}"
+                  targetFields="{!v.simpleContact}"
+                  mode="VIEW"   
+                  />
+</aura:component>
+
+
+/**/
+({ 
+    isRefreshed: function(component, event, helper) 
+    { 
+    var DfSStatus = component.get("v.simpleContact");
+        
+    if(DfSStatus.DFS_Issue__c !== null)
+    {
+    //Showing Toast    
+    var showToast = $A.get("e.force:showToast"); 
+    showToast.setParams({ 
+    title : 'Attention',
+    message: DfSStatus.DFS_Issue__c,  
+    duration:' 4000',
+    key: 'info_alt',
+    type: 'info',
+    mode: 'dismissible' 
+    }); 
+    showToast.fire(); 
+    }
+    }
+    
+	
+    
+})
